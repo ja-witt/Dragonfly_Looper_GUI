@@ -119,22 +119,14 @@ Objective: Start full imaging only after red signal appears.
 
 ## File Organization
 
-Ensure all `.py` scripts are located in the same folder:
-
-```
-D:\Dragonfly_auto\
-└── v2\
-    ├── dragonfly_auto_GUI.py
-    ├── ... (other dependent scripts)
-```
+Ensure all `.py` scripts are located in the same folder as they reference each other.
 
 ---
 
 ## Known Issues
 
-- Fusion sometimes falsely reports 100% protocol completion
-- Only single-channel images are supported for image based 
-- Protocol name mismatches cause silent failures
+- Only single-channel images are sensible for image based triggers.
+- Protocol name mismatches cause failures, but there are no warnings.
 
 ---
 
