@@ -106,14 +106,6 @@ def _set_selected_protocol(value):
 
 
 def _get_protocol_progress():
-    """
-    According to Andor returns the following variables formatted like
-    "StartTime": "2019-01-31T11:53:37.6799174Z",
-    "ElapsedTime": "00:00:06.9610000",
-    "RemainingTime": "00:00:20.4000000",
-    "EstimatedTimeOfCompletion": "2019-01-31T11:54:05.1522273Z",
-    "Progress": 0.2
-    """
     return __get("/v1/protocol/progress")
 
 
@@ -128,8 +120,15 @@ def _get_current_image_path():
 
 def _get_list_of_devices():
     """
-    This should return a list like "Devices": ["dummy-camera","dummy-xy-stage","dummy-z-control","microscope",
-    "light-source", "dummy-confocal-unit","dummy-light-source"]
+    This should return a list like "Devices": [
+            "dummy-camera",
+            "dummy-xy-stage",
+            "dummy-z-control",
+            "microscope",
+            "light-source",
+            "dummy-confocal-unit",
+            "dummy-light-source"
+            ]
     """
     return __get_value("/v1/devices", "Devices")
 
@@ -139,11 +138,10 @@ def _get_list_of_device_features(device_name):
 
 
 def _get_value_of_feature_of_device(device_name, feature_name):
-    return __get_value("/v1/devices/" + device_name + "/" + feature_name + "/", "Value")
-
+    return __get_value("/v1/devices/" + device_name + "/" + feature_name, "Value")
 
 def _set_value_of_feature_of_device(device_name, feature_name, value):
-    return __put_value("/v1/devices/" + device_name + "/", feature_name, value)
+    return __put_value("/v1/devices/" + device_name + "/" + feature_name, "Value", value)
 
 
 # high-level API
@@ -159,8 +157,8 @@ def run(name):
     """
     Changes to the named protocol and starts to run it.
     If no name is given, runs the currently-selected protocol.
-    NB: this function does not block until the state changes; use `get_state()` to be sure the protocol
-    has actually started.
+
+    NB: this function does not block until the state changes; use `get_state()` to be sure the protocol has actually started.
     """
     if name is not None:
         _set_selected_protocol(name)
@@ -172,8 +170,8 @@ def pause():
     Pauses a protocol that is currently running.
     The protocol can be resumed with a `resume()` call.
     It is an error to call this if no protocol is running.
-    NB: this function does not block until the state changes; use `get_state()` to be sure the protocol
-    has actually paused.
+
+    NB: this function does not block until the state changes; use `get_state()` to be sure the protocol has actually paused.
     """
     _set_state('Paused')
 
@@ -182,8 +180,8 @@ def resume():
     """
     Resumes a previously-paused protocol.
     It is an error to call this if no protocol is running or paused.
-    NB: this function does not block until the state changes; use `get_state()` to be sure the protocol
-    has actually resumed.
+
+    NB: this function does not block until the state changes; use `get_state()` to be sure the protocol has actually resumed.
     """
     _set_state('Running')
 
@@ -192,8 +190,8 @@ def stop():
     """
     Stops a protocol that is currently running.
     It is an error to call this if no protocol is running or paused.
-    NB: this function does not block until the state changes; use `get_state()` to be sure the protocol
-    has actually stopped.
+
+    NB: this function does not block until the state changes; use `get_state()` to be sure the protocol has actually stopped.
     """
     _set_state('Aborted')
 
@@ -215,6 +213,7 @@ def get_state():
 def wait_until_state(target_state, check_interval_secs):
     """
     Waits until the protocol is in the given `target_state`.
+    Repeatedly queries the API every `check_interval_secs`.
     This call will block until the target state is reached.
     """
     while _get_state() != target_state:
@@ -276,8 +275,11 @@ def get_list_of_device_features(device_name):
     return _get_list_of_device_features(device_name)
 
 
-def get_value_of_feature_of_device(device_name, feature_value):
-    return _get_value_of_feature_of_device(device_name, feature_value)
+def get_value_of_feature_of_device(device_name, feature_name):
+    return _get_value_of_feature_of_device(device_name, feature_name)
+    
+def set_value_of_feature_of_device(device_name, feature_name, feature_value):
+    return _set_value_of_feature_of_device(device_name, feature_name, feature_value)
 
 
 def for_all_devices_get_all_features():
@@ -289,7 +291,6 @@ def for_all_devices_get_all_features():
         device_features = get_list_of_device_features(device)
         print("    ", device_features)
     return
-
 
 def time_string_to_sensible_output(time_string):
     from dateutil.parser import isoparse
@@ -325,9 +326,21 @@ def get_protocol_progress():
 
 
 def get_values_of_stage():
-    get_value_of_feature_of_device("xyz-stage", "xposition")
+    x = get_value_of_feature_of_device("xyz-stage", "xposition")
+    y = get_value_of_feature_of_device("xyz-stage", "yposition")
+    z = get_value_of_feature_of_device("xyz-stage", "zposition")
+    return x, y, z
+    
+def set_values_of_stage(x, y, z):
+    set_value_of_feature_of_device("xyz-stage", "xposition", x)
+    set_value_of_feature_of_device("xyz-stage", "yposition", y)
+    set_value_of_feature_of_device("xyz-stage", "zposition", z)
+    return 
+
+def get_exposure_time():
+    get_value_of_feature_of_device("exposuretime")
 
 
 if __name__ == "__main__":
-    print(time_string_to_sensible_output("2019-01-31T11:53:37.6799174Z"))
-    print(time_delta_to_sensible_output("00:00:06.9610000"))
+    print("running fusionrest")
+    for_all_devices_get_all_features()
