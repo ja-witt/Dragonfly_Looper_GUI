@@ -58,11 +58,12 @@ python -m pip install requests matplotlib h5py
   Add a fixed wait interval in seconds.
 
 - **Start Inner Loop**  
-  Creates a nested loop. Set number of repetitions and loop interval. Optionally add a trigger function. <br>
+  Creates a nested loop. Set number of repetitions and loop interval (in seconds). Optionally add a trigger function. <br>
   The trigger functions analyze the most recent 3D image (single-channel only)
   - `image_max_intensity_trigger`: Returns the maximum intensity value found in the most recent 3D image. This can be useful for detecting strong signals or sudden bright events.
   - `image_99_percentile_trigger`: Returns the 99th percentile intensity of the most recent 3D image. This is similar to the maximum, but less sensitive to outlier pixels or noise, making it a more stable trigger for consistent signals.
   - These functions are used with conditional triggers or to exit inner loops. You can apply logical conditions (>, <) with user-defined threshold values to control protocol execution based on image content.
+  - It is possible to add trigger functions (functions that read in the last image and return a value based on that) in `trigger_functions.py`. All functions that are in this python file will be shown in the dropdown menu.
 
 - **End Inner Loop**  
   Ends the current nested loop.
