@@ -1,6 +1,6 @@
 # Dragonfly Looper GUI
-
-Dragonfly Looper GUI is a python-based graphical interface for automating imaging protocols using Andor's Dragonfly microscope via Fusion's REST API. This version improves usability, supports nested and conditional logic, and handles timing more intelligently than earlier iterations.
+In short: This program allows you run several your Dragonfly protocols consecutively and loop them. In this way you can create "Meta-Protocols". It allows you to access the Fusion REST API using a graphical interface, instead of programming commands for making the setup easier. <br> 
+A bit more technical: Dragonfly Looper GUI is a python-based graphical interface for automating imaging protocols using Andor's Dragonfly microscope via Fusion's REST API. This version supports nested and conditional logic with decisions based on the last image that was captured.
   <img src="https://github.com/user-attachments/assets/30d590b8-b81a-48d4-858d-06e15f8234d8" width="750" title="Dragonfly Looper GUI" alt="Dragonfly Looper GUI"/>
 
 ## Features
@@ -8,6 +8,7 @@ Dragonfly Looper GUI is a python-based graphical interface for automating imagin
 - Graphical user interface for building and controlling protocol loops via the Fusion Rest API
 - Handles loop timing similarly to Dragonfly Fusion: runs protocols as quickly as possible if timing is too tight, otherwise waits for the specified interval
 - Nested loops and if-statements for slightly advanced protocol control (based on image intensity thresholds, but expandable)
+- Feedback in the console window (optional) allows you to check if everything ran smoothly in an automated way
 
 ---
 
