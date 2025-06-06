@@ -27,7 +27,7 @@ See: https://fusion-benchtop-software-guide.scrollhelp.site/fusionum/automation 
 ### 2. Install Required Python Packages
 
 - Tested with python 3.13 and python 3.11
-- Relies on several python packages available from pypi that can be installed via:
+- Relies on several python packages available from pypi that can be installed in the appropriate environment via:
 
 ```
 python -m pip install requests matplotlib h5py
